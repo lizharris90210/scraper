@@ -29,13 +29,12 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 // // Deployed
 var MONGODB_URI = 
-process.env.MONGODB_URI ;
+// process.env.MONGODB_URI ;
 // ||
 // Local
-// "mongodb://localhost/mongoHeadlines";
+"mongodb://localhost/mongoHeadlines";
 
-mongoose.connect(MONGODB_URI
-  , { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Routes
 // A GET route for scraping the echoJS website
@@ -85,15 +84,12 @@ app.get("/articles", function (req, res) {
 
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function (req, res) {
-  db.Article.findOne({ _id: req.params })
-    .populate(note)
+  db.Article.findOne({ _id: req.params.id })
+    .populate("note")
     .then(dbArticle => res.json(dbArticle))
     .catch(err => res.json(err))
-  // TODO
-  // ====
-  // Finish the route so it finds one article using the req.params.id,
-  // and run the populate method with "note",
-  // then responds with the article with the note included
+
+
 });
 
 // Route for saving/updating an Article's associated Note
@@ -111,8 +107,8 @@ app.post("/articles/:id", function (req, res) {
       // and update it's "note" property with the _id of the new note
     });
 
+});
   // Start the server
   app.listen(PORT, function () {
     console.log("App running on port " + PORT + "!");
   });
-});
